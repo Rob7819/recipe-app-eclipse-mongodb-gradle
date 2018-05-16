@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="guru.springframework.Spring5RecipeAppApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-05-14T22:09:52" hostname="ROB-PC" time="0.002">
+  <properties/>
+  <testcase name="contextLoads" classname="guru.springframework.Spring5RecipeAppApplicationTests" time="0.002"/>
+  <system-out><![CDATA[2018-05-14 18:09:52.304  INFO 5712 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [guru.springframework.Spring5RecipeAppApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+2018-05-14 18:09:52.304  INFO 5712 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [guru.springframework.Spring5RecipeAppApplicationTests]: Spring5RecipeAppApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

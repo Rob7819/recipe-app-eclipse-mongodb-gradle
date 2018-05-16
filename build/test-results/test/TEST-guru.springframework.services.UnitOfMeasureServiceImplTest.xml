@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="guru.springframework.services.UnitOfMeasureServiceImplTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-05-14T22:09:52" hostname="ROB-PC" time="0.001">
+  <properties/>
+  <testcase name="listAllUoms" classname="guru.springframework.services.UnitOfMeasureServiceImplTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

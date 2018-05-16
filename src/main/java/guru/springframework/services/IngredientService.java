@@ -1,13 +1,14 @@
 package guru.springframework.services;
 
 import guru.springframework.commands.IngredientCommand;
+import reactor.core.publisher.Mono;
 
 public interface IngredientService {
 
-	IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String id);
+	Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String id);
 	
-	IngredientCommand saveIngredientCommand(IngredientCommand command);
+	Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command);
 
-	void deleteById(String recipeId, String id);
+	Mono<Void> deleteById(String recipeId, String id);
 	
 }

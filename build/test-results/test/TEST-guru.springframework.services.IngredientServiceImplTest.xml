@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="guru.springframework.services.IngredientServiceImplTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2018-05-14T22:09:50" hostname="ROB-PC" time="0.041">
+  <properties/>
+  <testcase name="findByRecipeIdAndId" classname="guru.springframework.services.IngredientServiceImplTest" time="0.032"/>
+  <testcase name="testDeleteById" classname="guru.springframework.services.IngredientServiceImplTest" time="0.007"/>
+  <testcase name="findByRecipeIdAndRecipeIdHappyPath" classname="guru.springframework.services.IngredientServiceImplTest" time="0.001"/>
+  <testcase name="testSaveRecipeCommand" classname="guru.springframework.services.IngredientServiceImplTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
