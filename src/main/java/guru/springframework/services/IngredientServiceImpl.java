@@ -10,6 +10,7 @@ import guru.springframework.converters.IngredientCommandToIngredient;
 import guru.springframework.converters.IngredientToIngredientCommand;
 import guru.springframework.domain.Ingredient;
 import guru.springframework.domain.Recipe;
+import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.reactive.RecipeReactiveRepository;
 import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final RecipeReactiveRepository recipeReactiveRepository;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
     private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
-    
+      
     public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand,
             IngredientCommandToIngredient ingredientCommandToIngredient,
             RecipeReactiveRepository recipeReactiveRepository, UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository) {
@@ -31,23 +32,22 @@ public class IngredientServiceImpl implements IngredientService {
     	this.ingredientCommandToIngredient = ingredientCommandToIngredient;
     	this.recipeReactiveRepository = recipeReactiveRepository;
     	this.unitOfMeasureReactiveRepository = unitOfMeasureReactiveRepository;
+    	
     }
 	
 	@Override
 	public Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
 		
-		return recipeReactiveRepository.findById(recipeId)
-				.map(recipe -> recipe.getIngredients()
-						.stream()
-						.filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
-						.findFirst())
-				.filter(Optional::isPresent)
-				.map(ingredient -> {
-					IngredientCommand command = ingredientToIngredientCommand.convert(ingredient.get());
-					command.setRecipeId(recipeId);
-					return command;
-				});
-		
+		return recipeReactiveRepository
+				.findById(recipeId)
+                .flatMapIterable(Recipe::getIngredients)
+                .filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
+                .single()
+                .map(ingredient -> {
+                    IngredientCommand command = ingredientToIngredientCommand.convert(ingredient);
+                    command.setRecipeId(recipeId);
+                    return command;
+                });
 		
 		//Optional<Recipe> recipeOptional = recipeReactiveRepository.findById(recipeId).block();
 
@@ -80,7 +80,9 @@ public class IngredientServiceImpl implements IngredientService {
 	@Override
     @Transactional
     public Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command) {
-        Recipe recipeOptional = recipeReactiveRepository.findById(command.getRecipeId()).block();
+        //going to leave reactive version?  Confused with approach (@DBRef incompatible
+		//with reactive mongo driver)
+		Recipe recipeOptional = recipeReactiveRepository.findById(command.getRecipeId()).block();
 
         if(recipeOptional == null){
 
@@ -144,7 +146,7 @@ public class IngredientServiceImpl implements IngredientService {
     public Mono<Void> deleteById(String recipeId, String idToDelete) {
 
         log.debug("Deleting ingredient: " + recipeId + ":" + idToDelete);
-
+        //leaving reactive version?
         Recipe recipeOptional = recipeReactiveRepository.findById(recipeId).block();
 
         if(recipeOptional != null){
@@ -163,7 +165,7 @@ public class IngredientServiceImpl implements IngredientService {
                 //Ingredient ingredientToDelete = ingredientOptional.get();
                 //ingredientToDelete.setRecipe(null);
                 recipe.getIngredients().remove(ingredientOptional.get());
-                recipeReactiveRepository.save(recipe).block();
+                recipeReactiveRepository.save(recipe).block();//this line is problematic due to @DBREF issue with reactive mongo driver -- To be resolved later...
             }
         } else {
             log.debug("Recipe Id Not found. Id:" + recipeId);

@@ -1,5 +1,7 @@
 package guru.springframework.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.ArgumentMatchers.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
 import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.RecipeService;
+import reactor.core.publisher.Mono;
 
 public class RecipeControllerTest {
 	
@@ -60,7 +62,7 @@ public class RecipeControllerTest {
 		
 		
 		
-		when(recipeService.findById(anyString())).thenReturn(recipe);
+		when(recipeService.findById(anyString())).thenReturn(Mono.just(recipe));
 		
 		mockMvc.perform(get("/recipe/1/show"))
 				.andExpect(status().isOk())
@@ -95,7 +97,7 @@ public class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2");
 
-        when(recipeService.saveRecipeCommand(argumentCaptorRecipeCommand.capture())).thenReturn(command);
+        when(recipeService.saveRecipeCommand(argumentCaptorRecipeCommand.capture())).thenReturn(Mono.just(command));
 
         //"directions" needed to be added for test to pass since validation
         //was added in RecipeCommand
@@ -115,7 +117,7 @@ public class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2");
 
-        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(command));
 
         mockMvc.perform(post("/recipe")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -132,7 +134,7 @@ public class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId("2");
 
-        when(recipeService.findCommandById(anyString())).thenReturn(command);
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(command));
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
